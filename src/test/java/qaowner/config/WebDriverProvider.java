@@ -8,13 +8,11 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.aeonbits.owner.ConfigFactory;
-
 import java.util.function.Supplier;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
+
 
 public class WebDriverProvider implements Supplier<WebDriver> {
 
@@ -35,9 +33,7 @@ public class WebDriverProvider implements Supplier<WebDriver> {
 
         try (FileInputStream input = new FileInputStream(configFile)) {
             properties.load(input);
-            System.out.println("Загружен файл конфигурации: " + configFile);
         } catch (IOException e) {
-            System.out.println("Не удалось загрузить файл " + configFile + ", используются значения по умолчанию");
         }
 
         properties.setProperty("remote", String.valueOf(isRemote));
@@ -61,10 +57,6 @@ public class WebDriverProvider implements Supplier<WebDriver> {
     }
 
     private WebDriver createLocalDriver() {
-        System.out.println("Создание локального драйвера...");
-        System.out.println("Browser: " + config.getBrowser());
-        System.out.println("Browser Version: " + config.getBrowserVersion());
-
         switch (config.getBrowser().toLowerCase()) {
             case FIREFOX: {
                 FirefoxOptions options = new FirefoxOptions();
@@ -81,33 +73,14 @@ public class WebDriverProvider implements Supplier<WebDriver> {
     }
 
     private WebDriver createRemoteDriver() {
-        System.out.println("Создание RemoteWebDriver...");
-        System.out.println("Remote URL: " + config.getRemoteUrl());
-        System.out.println("Browser: " + config.getBrowser());
-        System.out.println("Browser Version: " + config.getBrowserVersion());
-
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("browserName", config.getBrowser());
         capabilities.setCapability("browserVersion", config.getBrowserVersion());
 
-        Map<String, Object> selenoidOptions = new HashMap<>();
-        selenoidOptions.put("enableVNC", true);
-        selenoidOptions.put("enableVideo", true);
-
-        if (!config.getSelenoidUser().isEmpty()) {
-            selenoidOptions.put("user", config.getSelenoidUser());
-        }
-        if (!config.getSelenoidPassword().isEmpty()) {
-            selenoidOptions.put("password", config.getSelenoidPassword());
-        }
-
-        capabilities.setCapability("selenoid:options", selenoidOptions);
-
         try {
             return new RemoteWebDriver(config.getRemoteUrl(), capabilities);
         } catch (Exception e) {
-            System.err.println("Ошибка создания RemoteWebDriver: " + e.getMessage());
-            throw new RuntimeException("Не удалось создать RemoteWebDriver. Проверьте доступность Selenoid по адресу: " + config.getRemoteUrl(), e);
+            throw new RuntimeException("Не удалось создать RemoteWebDriver", e);
         }
     }
 }
