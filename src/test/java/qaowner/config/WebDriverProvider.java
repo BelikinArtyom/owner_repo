@@ -1,17 +1,22 @@
 package qaowner.config;
 
+import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.function.Supplier;
 
+import static com.codeborne.selenide.Browsers.CHROME;
+import static com.codeborne.selenide.Browsers.FIREFOX;
+
 public class WebDriverProvider  implements Supplier<WebDriver> {
 
-    private final WebDriverConfig config;
+    private final WebDriverNewConfig config;
 
     public WebDriverProvider() {
-        config = new WebDriverConfig();
+        this.config = ConfigFactory.create(WebDriverNewConfig.class, System.getProperties());
+
     }
 
     @Override
