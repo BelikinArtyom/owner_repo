@@ -21,7 +21,6 @@ public class WebDriverProvider  implements Supplier<WebDriver> {
 
     @Override
     public WebDriver get() {
-
         WebDriver driver = createDriver();
         driver.get(config.getBaseUrl());
         return driver;
