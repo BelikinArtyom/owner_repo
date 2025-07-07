@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import qaowner.config.WebDriverProvider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,5 +27,4 @@ public class WebDriverTest {
     public void stopDriver() {
         driver.quit();
     }
-
 }
